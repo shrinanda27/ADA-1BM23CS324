@@ -1,59 +1,57 @@
 #include <stdio.h>
 
-int a[10][10], D[10][10], n;
+int n;
+int a[10][10];
+int p[10][10];
 
-void floyd(int a[][10], int n);
-int min(int a, int b);
-
-int main() {
-    printf("Enter the number of vertices: ");
-    scanf("%d", &n);
-
-    printf("Enter the cost adjacency matrix:\n");
+void write_data() {
     int i, j;
+    printf("The path matrix is shown below:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            printf("%d ", p[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void read_data() {
+    int i, j;
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+    printf("Enter the adjacency matrix:\n");
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             scanf("%d", &a[i][j]);
         }
     }
-
-    floyd(a, n);
-
-    printf("Distance Matrix:\n");
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            printf("%d ", D[i][j]);
-        }
-        printf("\n");
-    }
-
-    return 0;
 }
 
-void floyd(int a[][10], int n) {
+void path_matrix() {
     int i, j, k;
-
-    // Initialize distance matrix with the given adjacency matrix
+    
+    // Initialize the path matrix p with the adjacency matrix a
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
-            D[i][j] = a[i][j];
+            p[i][j] = a[i][j];
         }
     }
-
-    // Floyd-Warshall algorithm
+    
+    // Floyd-Warshall algorithm to find the path matrix
     for (k = 0; k < n; k++) {
         for (i = 0; i < n; i++) {
             for (j = 0; j < n; j++) {
-                D[i][j] = min(D[i][j], D[i][k] + D[k][j]);
+                if (p[i][k] == 1 && p[k][j] == 1) {
+                    p[i][j] = 1;
+                }
             }
         }
     }
 }
 
-int min(int a, int b) {
-    if (a < b) {
-        return a;
-    } else {
-        return b;
-    }
+int main() {
+    read_data();
+    path_matrix();
+    write_data();
+    return 0;
 }
